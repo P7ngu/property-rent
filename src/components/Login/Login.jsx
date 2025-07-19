@@ -28,7 +28,7 @@ const Login = () => {
       const res = await axios.post("http://localhost:5001/api/auth/login", form);
       localStorage.setItem("token", res.data.token);
       setMessage("✅ Login successful!");
-      navigate("/dashboard"); // or wherever you want
+      navigate("/newproduct"); 
     } catch (err) {
       setMessage("❌ " + (err.response?.data?.error || "Login failed"));
     }
