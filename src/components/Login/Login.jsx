@@ -35,7 +35,7 @@ const Login = () => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-pink-50 p-4">
+    <div className="min-h-screen flex flex-col items-center justify-center bg-pink-50 p-4" style={{ padding: "2rem", marginTop: "80px" }}>
       <form
         onSubmit={handleSubmit}
         className="bg-white shadow-lg p-8 rounded-xl w-full max-w-md space-y-6 mb-8"
@@ -76,7 +76,7 @@ const Login = () => {
 
       {/* Demo user viewer */}
       <div className="bg-white shadow p-6 rounded-xl w-full max-w-md">
-        <h3 className="text-lg font-semibold mb-2 text-pink-700">👥 Test Users</h3>
+        <h3 className="text-lg font-semibold mb-2 text-pink-700" style={{ padding: "2rem", marginTop: "300px" }}>👥 Test Users</h3>
         {users.length > 0 ? (
           <ul className="space-y-2 text-sm text-gray-700">
             {users.map((user, idx) => (
