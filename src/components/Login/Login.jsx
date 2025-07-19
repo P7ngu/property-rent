@@ -36,43 +36,49 @@ const Login = () => {
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-pink-50 p-4" style={{ padding: "2rem", marginTop: "80px" }}>
-      <form
-        onSubmit={handleSubmit}
-        className="bg-white shadow-lg p-8 rounded-xl w-full max-w-md space-y-6 mb-8"
-      >
-        <h2 className="text-2xl font-bold text-pink-600 text-center">Login</h2>
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-pink-100 via-rose-100 to-fuchsia-100 px-4">
+  <form
+    onSubmit={handleSubmit}
+    className="w-full max-w-md bg-white p-8 rounded-2xl shadow-xl space-y-6"
+  >
+    <h2 className="text-3xl font-bold text-center text-pink-600">Welcome Back 💖</h2>
 
-        <div>
-          <label className="block text-gray-700 mb-1">Email</label>
-          <input
-            type="email"
-            name="email"
-            onChange={handleChange}
-            required
-            className="w-full p-2 border border-gray-300 rounded"
-          />
-        </div>
+    <div>
+      <label className="block mb-1 text-sm text-gray-700">Email</label>
+      <input
+        type="email"
+        name="email"
+        onChange={handleChange}
+        required
+        placeholder="e.g. jane@example.com"
+        className="w-full p-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-pink-400 outline-none"
+      />
+    </div>
 
-        <div>
-          <label className="block text-gray-700 mb-1">Password</label>
-          <input
-            type="password"
-            name="password"
-            onChange={handleChange}
-            required
-            className="w-full p-2 border border-gray-300 rounded"
-          />
-        </div>
+    <div>
+      <label className="block mb-1 text-sm text-gray-700">Password</label>
+      <input
+        type="password"
+        name="password"
+        onChange={handleChange}
+        required
+        placeholder="••••••"
+        className="w-full p-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-pink-400 outline-none"
+      />
+    </div>
 
-        <button
-          type="submit"
-          className="w-full bg-pink-500 hover:bg-pink-600 text-white py-2 rounded"
-        >
-          Log In
-        </button>
+    <button
+      type="submit"
+      className="w-full bg-pink-500 hover:bg-pink-600 text-white py-3 rounded-xl font-semibold transition duration-200"
+    >
+      Log In
+    </button>
 
-        {message && <p className="text-center text-gray-600">{message}</p>}
-      </form>
+    {message && (
+      <p className="text-center text-sm text-gray-700 mt-2">{message}</p>
+    )}
+  </form>
+</div>
 
       {/* Demo user viewer */}
       <div className="bg-white shadow p-6 rounded-xl w-full max-w-md">
