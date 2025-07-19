@@ -9,6 +9,8 @@ import TermsAndConditions from './components/TermsAndConditions/TermsAndConditio
 import Navbar from './components/Navbar/Navbar';
 import Footer from './components/Footer/Footer';
 import NewProduct from './components/NewProduct/NewProduct';
+import Login from "./components/Login/Login";
+
 import './App.css'
 
 const App = () => {
@@ -24,6 +26,7 @@ const App = () => {
           <Route path='/villas' element={<Villas/>}/>
           <Route path='/villa/:id' element={<SingleVilla/>}/>
           <Route path='/newproduct' element={<NewProduct/>}/>
+          <Route path='/login' element={<Login/>}/>
         </Routes>
         <Footer/>
       </Router>

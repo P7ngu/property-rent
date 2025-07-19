@@ -1,88 +1,54 @@
-// server/controllers/auth.js
-const bcrypt = require('bcrypt');
-const jwt = require('jsonwebtoken');
-const User = require('../models/User');
-const { validationResult } = require('express-validator');
+const fs = require("fs");
+const path = require("path");
+const jwt = require("jsonwebtoken");
+const { validationResult } = require("express-validator");
 
-exports.signup = async (req, res) => {
-  try {
-    // Validate request data
-    const errors = validationResult(req);
-    
-    if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
-    }
+const dbPath = path.join(__dirname, "../db.json");
 
-    // Extract user data from request body
-    const { username, email, password, role } = req.body;
+const readUsers = () =>
+  JSON.parse(fs.readFileSync(dbPath, "utf-8"));
 
-    console.log('Signup data:', { username, email, role });
+const writeUsers = (users) =>
+  fs.writeFileSync(dbPath, JSON.stringify(users, null, 2));
 
-    // Check if the user already exists
-    const existingUser = await User.findOne({ role, email});
-    if (existingUser) {
-      return res.status(400).json({ error: 'User with this email already exists for role ${role}' });
-    }
+// SIGNUP
+exports.signup = (req, res) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty())
+    return res.status(400).json({ errors: errors.array() });
 
-    // Hash the password
-    const hashedPassword = await bcrypt.hash(password, 10);
+  const { username, email, password } = req.body;
+  const users = readUsers();
 
-    // Create a new user
-    const newUser = new User({
-      username,
-      email,
-      password: hashedPassword,
-      role,
-    });
-
-    // Save the user to the database
-    await newUser.save();
-
-    res.status(201).json({ message: 'User created successfully', role });
-    console.log('getting the role',role)
-  } catch (error) {
-    console.error('Error signing up:', error);
-    res.status(500).json({ error: 'Internal Server Error' });
+  const existingUser = users.find((u) => u.email === email);
+  if (existingUser) {
+    return res.status(400).json({ error: "User already exists" });
   }
+
+  const newUser = { username, email, password };
+  users.push(newUser);
+  writeUsers(users);
+
+  res.status(201).json({ message: "User created successfully" });
 };
 
-exports.login = async (req, res) => {
-  try {
-    // Validate request data
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-        return res.status(400).json({ errors: errors.array() });
-    }
-    
-    // Extract user data from request body
-    const { email, password, role } = req.body;
-    
-    console.log('user role is:', role)
-    // Check if the user exists
-    const user = await User.findOne({ email });
-    if (!user) {
-      return res.status(401).json({ error: 'Invalid credentials' });
-    }
+// LOGIN
+exports.login = (req, res) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty())
+    return res.status(400).json({ errors: errors.array() });
 
-    // Check if the password is correct
-    const passwordMatch = await bcrypt.compare(password, user.password);
-    if (!passwordMatch) {
-      return res.status(401).json({ error: 'Invalid credentials' });
-    }
+  const { email, password } = req.body;
+  const users = readUsers();
 
-    if (req.body.role && user.role !== req.body.role) {
-        return res.status(401).json({ error: 'Invalid credentials for the selected role' });
-    }
-
-    // Generate a JWT token
-    const token = jwt.sign({ userId: user._id, role: user.role }, process.env.JWT_SECRET, {
-      expiresIn: '1h',
-    });
-    console.log(user.role)
-
-    res.json({ token, userId: user._id, role: user.role });
-  } catch (error) {
-    console.error('Error logging in:', error);
-    res.status(500).json({ error: 'Internal Server Error' });
+  const user = users.find((u) => u.email === email && u.password === password);
+  if (!user) {
+    return res.status(401).json({ error: "Invalid credentials" });
   }
+
+  const token = jwt.sign({ email: user.email }, process.env.JWT_SECRET || "devsecret", {
+    expiresIn: "1h",
+  });
+
+  res.json({ token });
 };

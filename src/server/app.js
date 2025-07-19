@@ -9,6 +9,15 @@ const sellerRoutes = require('./routers/sellerRoutes');
 
 require('dotenv').config();
 
+const mongoose = require("mongoose");
+
+mongoose.connect(process.env.MONGO_URI, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+})
+.then(() => console.log("MongoDB connected"))
+.catch((err) => console.error("MongoDB connection error:", err));
+
 const app = express();
 const server = http.createServer(app);
 
@@ -34,13 +43,14 @@ app.use('/api/auth', authRoutes);
 app.use('/api/products', productRoutes);
 app.use('/api/seller', sellerRoutes);
 
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 5001;
 const io = socketIO(server, {
     cors: {
         origin: 'http://localhost:3000',
         methods: ['GET', 'POST'],
     },
 });
+
 
 
 io.on('connection', (socket) => {
